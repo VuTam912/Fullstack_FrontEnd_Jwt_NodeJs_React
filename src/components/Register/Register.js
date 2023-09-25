@@ -1,5 +1,7 @@
 import './Register.scss';
 import { useHistory } from 'react-router-dom';
+import axios from 'axios';
+import { useEffect } from 'react';
 
 const Register = (props) => {
 	let history = useHistory(); // replace to NavLink or Link if use button
@@ -7,6 +9,12 @@ const Register = (props) => {
 		// chuyến hướng register Page
 		history.push('/Login');
 	};
+
+	useEffect(() => {
+		axios.get('https://reqres.in/api/users?page=2').then((data) => {
+			console.log(data.data);
+		});
+	}, []);
 
 	return (
 		<div className='Register-container '>
