@@ -1,6 +1,13 @@
 import './Login.scss';
+import { useHistory } from 'react-router-dom';
 
 const Login = (props) => {
+	let history = useHistory(); // replace to NavLink or Link if use button
+	const handleCreateNewAccount = () => {
+		// chuyến hướng register Page
+		history.push('/register');
+	};
+
 	return (
 		<div className='Login-container '>
 			<div className='container'>
@@ -34,7 +41,10 @@ const Login = (props) => {
 						</span>
 						<hr />
 						<div className='text-center'>
-							<button className='btn btn-success fw-bold py-2'>
+							<button
+								className='btn btn-success fw-bold py-2'
+								onClick={handleCreateNewAccount}
+							>
 								Create new account
 							</button>
 						</div>
