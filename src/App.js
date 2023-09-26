@@ -33,7 +33,7 @@ function App() {
 			</div>
 			{/* Toast - alert*/}
 			<ToastContainer
-				position='top-center'
+				position='bottom-center'
 				autoClose={5000}
 				hideProgressBar={false}
 				newestOnTop={false}

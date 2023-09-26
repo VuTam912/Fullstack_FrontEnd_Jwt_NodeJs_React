@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { registerNewUser } from '../../services/userService';
 
 const Register = (props) => {
 	// Form's State
@@ -79,20 +80,23 @@ const Register = (props) => {
 	};
 
 	// Handle Registe
-	const handleRegister = () => {
+	const handleRegister = async () => {
 		let check = isValidateInputs();
 
 		//
 		if (check === true) {
 			// post - api
-			axios.post('http://localhost:8000/api/v1/register', {
-				email,
-				phone,
-				username,
-				password,
-			});
+			let response = await registerNewUser(email, phone, username, password);
+			let serverData = response.data;
 
-			toast.success('Register success');
+			if (+serverData.EC === 0) {
+				// EC = error Code
+				// register success => chuyển hệ thức về trang login
+				toast.success(serverData.EM); // EM: error message
+				history.push('/Login');
+			} else {
+				toast.error(serverData.EM);
+			}
 		}
 	};
 
