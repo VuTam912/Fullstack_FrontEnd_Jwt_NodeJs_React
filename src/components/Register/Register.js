@@ -2,6 +2,7 @@ import './Register.scss';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const Register = (props) => {
 	// Form's State
@@ -24,10 +25,41 @@ const Register = (props) => {
 		// });
 	}, []);
 
+	// Validate Form
+	const isValidateInputs = () => {
+		if (!email) {
+			toast.error('Email is required');
+			return false;
+		}
+		if (!phone) {
+			toast.error('Phone is required');
+			return false;
+		}
+		if (!password) {
+			toast.error('Password is required');
+			return false;
+		}
+
+		if (password !== confirmPassword) {
+			toast.error('Your password is not the same');
+			return false;
+		}
+
+		// regex email
+		let regex = /\S+@\S+\.\S+/;
+		if (!regex.test(email)) {
+			toast.error('Please enter a valid email address.');
+			return false;
+		}
+
+		return true;
+	};
+
 	// Handle Registe
 	const handleRegister = () => {
+		let check = isValidateInputs();
 		let userData = { email, phone, username, password, confirmPassword };
-
+		toast.success('Reigster susscess');
 		console.log('--Check user data: ', userData);
 	};
 
