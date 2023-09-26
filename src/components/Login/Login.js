@@ -38,7 +38,24 @@ const Login = (props) => {
 			return;
 		}
 
-		await loginUser(valueLogin, password);
+		// call API  from userService
+		let response = await loginUser(valueLogin, password);
+		if (response && response.data && +response.data.EC === 0) {
+			// success -> chuyển hướng trang users
+			let data = {
+				isAuthenticated: true,
+				token: 'fake token',
+			};
+
+			sessionStorage.setItem('account', JSON.stringify(data)); // JSON.
+			history.push('/users');
+		}
+
+		if (response && response.data && +response.data.EC !== 0) {
+			// error
+			toast.error(response.data.EM);
+		}
+		console.log('-- check response: ', response.data);
 	};
 
 	return (
