@@ -48,7 +48,10 @@ const Login = (props) => {
 			};
 
 			sessionStorage.setItem('account', JSON.stringify(data)); // JSON.
+			// chú ý nó sẽ ko render component (App) lai khi chuyển huong trang mà chi render User trong switch cảu router
+			// fix: refresh cả trang lai App
 			history.push('/users');
+			window.location.reload(); // refresh lai
 		}
 
 		if (response && response.data && +response.data.EC !== 0) {
@@ -56,6 +59,13 @@ const Login = (props) => {
 			toast.error(response.data.EM);
 		}
 		console.log('-- check response: ', response.data);
+	};
+
+	// Click login by key Enter
+	const handlePressEnter = (event) => {
+		if (event.charCode === 13 && event.code === 'Enter') {
+			handleLogin();
+		}
 	};
 
 	return (
@@ -94,6 +104,7 @@ const Login = (props) => {
 							placeholder='Password'
 							value={password}
 							onChange={(event) => setPassword(event.target.value)}
+							onKeyPress={(event) => handlePressEnter(event)}
 						/>
 						<button
 							className='btn btn-primary fw-bold py-2 fs-5'
