@@ -42,6 +42,7 @@ const Login = (props) => {
 		let response = await loginUser(valueLogin, password);
 		if (response && response.data && +response.data.EC === 0) {
 			// success -> chuyển hướng trang users
+			// set sessionStorage
 			let data = {
 				isAuthenticated: true,
 				token: 'fake token',

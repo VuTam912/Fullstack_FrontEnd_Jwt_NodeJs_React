@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-// Call API from backend
+// AXIOS - API - Backend
 
+// Call API from backend to Login/Register
 const registerNewUser = (email, phone, username, password) => {
 	// post - api
 	return axios.post('http://localhost:8000/api/v1/register', {
@@ -20,4 +21,10 @@ const loginUser = (valueLogin, password) => {
 	});
 };
 
-export { registerNewUser, loginUser };
+// get Data from backend
+// get all User
+const fetchAllUser = () => {
+	return axios.get('http://localhost:8000/api/v1/user/read');
+};
+
+export { registerNewUser, loginUser, fetchAllUser };
