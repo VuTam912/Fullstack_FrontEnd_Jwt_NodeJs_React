@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Login.scss';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -67,6 +67,16 @@ const Login = (props) => {
 			handleLogin();
 		}
 	};
+
+	// Check if user has loggin and want access Login agains
+	useEffect(() => {
+		let session = sessionStorage.getItem('account');
+		// nếu user đã login rồi thì đây vào trang home
+		if (session) {
+			history.push('/');
+			window.location.reload(); // reload để show navigation
+		}
+	}, []);
 
 	return (
 		<div className='Login-container '>

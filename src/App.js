@@ -1,13 +1,10 @@
 import './App.scss';
-import Login from './components/Login/Login';
 import Nav from './components/Navigation/Nav';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Register from './components/Register/Register';
-import { ToastContainer, toast } from 'react-toastify';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Users from './components/ManageUsers/Users';
 import { useEffect, useState } from 'react';
-import _ from 'lodash';
+import AppRoutes from './routes/AppRoutes';
 
 function App() {
 	// sessionStorage
@@ -21,33 +18,16 @@ function App() {
 	}, []);
 
 	return (
-		<Router>
-			<div className='app-container'>
-				{account && !_.isEmpty(account) && account.isAuthenticated && <Nav />}
+		<>
+			<Router>
+				<div className='app-header'>
+					<Nav />
+				</div>
 
-				{/* Switch: Handle router display component */}
-				<Switch>
-					<Route path='/news'>
-						{/* display content */}
-						News
-					</Route>
-					<Route path='/about'>About</Route>
-					<Route path='/contact'>Contact</Route>
-					<Route path='/login'>
-						<Login />
-					</Route>
-					<Route path='/register'>
-						<Register />
-					</Route>
-					<Route path='/users'>
-						<Users />
-					</Route>
-					<Route path='/' exact>
-						Home
-					</Route>
-					<Route path='*'>404 - Not found</Route>
-				</Switch>
-			</div>
+				<div className='app-container'>
+					<AppRoutes />
+				</div>
+			</Router>
 			{/* Toast - alert*/}
 			<ToastContainer
 				position='bottom-center'
@@ -61,7 +41,7 @@ function App() {
 				pauseOnHover
 				theme='light'
 			/>
-		</Router>
+		</>
 	);
 }
 
