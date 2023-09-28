@@ -1,4 +1,9 @@
-.nav ul li a,
-nav ul li a:visited {
-    line-height: 25px !important;
+.modal-user {
+    .content-body {
+        .row {
+            .red {
+                color: red;
+            }
+        }
+    }
 }

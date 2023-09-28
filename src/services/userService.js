@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+// USER
 // AXIOS - API - Backend
 
 // Call API from backend to Login/Register
@@ -36,4 +36,8 @@ const deleteUser = (user) => {
 	});
 };
 
-export { registerNewUser, loginUser, fetchAllUser, deleteUser };
+// get data group
+const getGroup = () => {
+	return axios.get(`http://localhost:8000/api/v1/group/read`);
+};
+export { registerNewUser, loginUser, fetchAllUser, deleteUser, getGroup };

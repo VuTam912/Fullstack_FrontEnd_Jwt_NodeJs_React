@@ -4,6 +4,7 @@ import './Users.scss';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import ModalDelete from './ModalDelete';
+import ModalUser from './ModalUser';
 
 const Users = (props) => {
 	const [listUsers, setListUsers] = useState([]);
@@ -160,12 +161,15 @@ const Users = (props) => {
 					)}
 				</div>
 			</div>
+			{/* Modal Delete User */}
 			<ModalDelete
 				show={isShowModalDelete}
 				handleClose={handleClose}
 				confirmDeleteUser={confirmDeleteUser}
 				dataModal={dataModal}
 			/>
+			{/* Modal Create a User */}
+			<ModalUser title={'Create new user'} />
 		</>
 	);
 };

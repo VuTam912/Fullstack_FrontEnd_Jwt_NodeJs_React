@@ -5,7 +5,7 @@ import { useState } from 'react';
 const ModalDelete = (props) => {
 	return (
 		<>
-			<Modal show={props.show} onHide={props.handleClose}>
+			<Modal show={props.show} onHide={props.handleClose} centered>
 				<Modal.Header closeButton>
 					<Modal.Title>Cornfim Delete User</Modal.Title>
 				</Modal.Header>
