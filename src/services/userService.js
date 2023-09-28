@@ -29,4 +29,11 @@ const fetchAllUser = (page, limit) => {
 	); // templete string
 };
 
-export { registerNewUser, loginUser, fetchAllUser };
+// delete a user
+const deleteUser = (user) => {
+	return axios.delete('http://localhost:8000/api/v1/user/delete', {
+		data: { id: user.id },
+	});
+};
+
+export { registerNewUser, loginUser, fetchAllUser, deleteUser };

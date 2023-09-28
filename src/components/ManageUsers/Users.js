@@ -1,7 +1,9 @@
-import { fetchAllUser } from '../../services/userService';
+import { toast } from 'react-toastify';
+import { fetchAllUser, deleteUser } from '../../services/userService';
 import './Users.scss';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
+import ModalDelete from './ModalDelete';
 
 const Users = (props) => {
 	const [listUsers, setListUsers] = useState([]);
@@ -10,11 +12,16 @@ const Users = (props) => {
 	const [currentLimit, setCurrentLimit] = useState(3); // only get 3 row in 1 page
 	const [totalPage, setTotalPage] = useState(0);
 
+	// Modal delete
+	const [isShowModalDelete, setIsShowModalDelete] = useState(false);
+	const [dataModal, setDataModal] = useState({});
+
 	// when render done is execute call fetchUsers
 	useEffect(() => {
 		fetchUsers();
 	}, [currentPage]); // fetchUser sẽ chạy lại khi currentPage nhận được thay đổi giá trị mới từ handlePageClick
 
+	// lay data va refresh data lai
 	const fetchUsers = async () => {
 		// nếu có tham số trên url api or ko có
 		let response = await fetchAllUser(currentPage, currentLimit);
@@ -25,7 +32,7 @@ const Users = (props) => {
 			setTotalPage(response.data.DT.totalPages);
 			setListUsers(response.data.DT.users);
 
-			console.log('--check res: ', response.data.DT);
+			// console.log('--check res: ', response.data.DT);
 		}
 	};
 
@@ -38,90 +45,128 @@ const Users = (props) => {
 		// option 1: add currentPage trong useEffect để kick hoạt gọi call await fetchUser mỗi khi biến currentPage cập nhập giá trị mới
 	};
 
+	// Delete User - show Modal
+	const handleDeleteUser = (user) => {
+		setDataModal(user); // set Data
+		setIsShowModalDelete(true);
+	};
+
+	// close modal delete
+	const handleClose = () => {
+		setIsShowModalDelete(false);
+		setDataModal({}); // set ""
+	};
+
+	// confirm delete user
+	const confirmDeleteUser = async () => {
+		let response = await deleteUser(dataModal);
+		console.log('--check user: ', response);
+		if (response && response.data.EC === 0) {
+			fetchUsers();
+			toast.success(response.data.EM);
+			setIsShowModalDelete(false); // hide Modal
+		} else {
+			toast.error(response.data.EM);
+		}
+	};
+
 	return (
-		<div className='container'>
-			<div className='manage-users-container'>
-				<div className='user-header'>
-					<div className='title'>
-						<h3>Table Users</h3>
+		<>
+			<div className='container'>
+				<div className='manage-users-container'>
+					<div className='user-header'>
+						<div className='title'>
+							<h3>Table Users</h3>
+						</div>
+						<div className='actions'>
+							<button className='btn btn-success'>Refresh</button>
+							<button className='btn btn-primary'>Add new user</button>
+						</div>
 					</div>
-					<div className='actions'>
-						<button className='btn btn-success'>Refresh</button>
-						<button className='btn btn-primary'>Add new user</button>
-					</div>
-				</div>
-				<div className='user-body'>
-					<table className='table table-hover table-bordered'>
-						<thead>
-							<tr>
-								<th scope='col'>No</th>
-								<th scope='col'>Id</th>
-								<th scope='col'>Email</th>
-								<th scope='col'>Username</th>
-								<th scope='col'>Group</th>
-								<th scope='col'>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							{listUsers && listUsers.length > 0 ? (
-								<>
-									{listUsers.map((item, index) => {
-										return (
-											<tr key={`row-${index}`}>
-												<td>{index + 1}</td>
-												<td>{item.id}</td>
-												<td>{item.email}</td>
-												<td>{item.username}</td>
-												<td>{item.Group ? item.Group.name : ''}</td>
-												<td>
-													<button className='btn btn-warning'>Edit</button>
-													<button className='btn btn-danger mx-2'>
-														Delete
-													</button>
-												</td>
-											</tr>
-										);
-									})}
-								</>
-							) : (
+					<div className='user-body'>
+						<table className='table table-hover table-bordered'>
+							<thead>
 								<tr>
-									<td>
-										<>
-											<span>Not found users</span>
-										</>
-									</td>
+									<th scope='col'>No</th>
+									<th scope='col'>Id</th>
+									<th scope='col'>Email</th>
+									<th scope='col'>Username</th>
+									<th scope='col'>Group</th>
+									<th scope='col'>Action</th>
 								</tr>
-							)}
-						</tbody>
-					</table>
-				</div>
-				{/* nếu có/không data thì show/hide pagination */}
-				{totalPage > 0 && (
-					<div className='user-footer'>
-						<ReactPaginate
-							nextLabel='next >'
-							onPageChange={handlePageClick}
-							pageRangeDisplayed={3}
-							marginPagesDisplayed={4}
-							pageCount={totalPage}
-							previousLabel='< previous'
-							pageClassName='page-item'
-							pageLinkClassName='page-link'
-							previousClassName='page-item'
-							previousLinkClassName='page-link'
-							nextClassName='page-item'
-							nextLinkClassName='page-link'
-							breakLabel='...'
-							breakClassName='page-item'
-							breakLinkClassName='page-link'
-							containerClassName='pagination'
-							activeClassName='active'
-							renderOnZeroPageCount={null}
-						/>
+							</thead>
+							<tbody>
+								{listUsers && listUsers.length > 0 ? (
+									<>
+										{listUsers.map((item, index) => {
+											return (
+												<tr key={`row-${index}`}>
+													<td>{index + 1}</td>
+													<td>{item.id}</td>
+													<td>{item.email}</td>
+													<td>{item.username}</td>
+													<td>{item.Group ? item.Group.name : ''}</td>
+													<td>
+														<button className='btn btn-warning me-2'>
+															Edit
+														</button>
+														<button
+															className='btn btn-danger'
+															onClick={() => handleDeleteUser(item)}
+														>
+															Delete
+														</button>
+													</td>
+												</tr>
+											);
+										})}
+									</>
+								) : (
+									<tr>
+										<td>
+											<>
+												<span>Not found users</span>
+											</>
+										</td>
+									</tr>
+								)}
+							</tbody>
+						</table>
 					</div>
-				)}
+					{/* nếu có/không data thì show/hide pagination */}
+					{totalPage > 0 && (
+						<div className='user-footer'>
+							<ReactPaginate
+								nextLabel='next >'
+								onPageChange={handlePageClick}
+								pageRangeDisplayed={3}
+								marginPagesDisplayed={4}
+								pageCount={totalPage}
+								previousLabel='< previous'
+								pageClassName='page-item'
+								pageLinkClassName='page-link'
+								previousClassName='page-item'
+								previousLinkClassName='page-link'
+								nextClassName='page-item'
+								nextLinkClassName='page-link'
+								breakLabel='...'
+								breakClassName='page-item'
+								breakLinkClassName='page-link'
+								containerClassName='pagination'
+								activeClassName='active'
+								renderOnZeroPageCount={null}
+							/>
+						</div>
+					)}
+				</div>
 			</div>
-		</div>
+			<ModalDelete
+				show={isShowModalDelete}
+				handleClose={handleClose}
+				confirmDeleteUser={confirmDeleteUser}
+				dataModal={dataModal}
+			/>
+		</>
 	);
 };
 
