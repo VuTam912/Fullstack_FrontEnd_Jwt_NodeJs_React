@@ -17,7 +17,7 @@ const Nav = (props) => {
 	return (
 		<>
 			{isShow === true && (
-				<div class='topnav'>
+				<div className='topnav'>
 					<NavLink to='/' exact>
 						Home
 					</NavLink>

@@ -23,8 +23,10 @@ const loginUser = (valueLogin, password) => {
 
 // get Data from backend
 // get all User
-const fetchAllUser = () => {
-	return axios.get('http://localhost:8000/api/v1/user/read');
+const fetchAllUser = (page, limit) => {
+	return axios.get(
+		`http://localhost:8000/api/v1/user/read?page=${page}&limit=${limit}`
+	); // templete string
 };
 
 export { registerNewUser, loginUser, fetchAllUser };
