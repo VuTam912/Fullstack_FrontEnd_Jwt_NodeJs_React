@@ -15,9 +15,12 @@ const Users = (props) => {
 
 	// Modal delete
 	const [isShowModalDelete, setIsShowModalDelete] = useState(false);
-	const [dataModal, setDataModal] = useState({});
-	// Modal Create a User
+	const [dataModal, setDataModal] = useState({}); // get data email => show title modal delete
+
+	// Modal update/create User
 	const [isShowModalCreate, setIsShowModalCreate] = useState(false);
+	const [actionModalUser, setActionModalUser] = useState('CREATE');
+	const [dataModalUser, setDataModalUser] = useState({}); // get data to edit
 
 	// when render done is execute call fetchUsers
 	useEffect(() => {
@@ -54,10 +57,10 @@ const Users = (props) => {
 		setIsShowModalDelete(true);
 	};
 
-	// close modal delete
+	// button close modal delete
 	const handleClose = () => {
 		setIsShowModalDelete(false);
-		setDataModal({}); // set ""
+		setDataModal({}); // xóa thành công đặt lại dataModal là emepty/null
 	};
 
 	// confirm delete user
@@ -73,9 +76,18 @@ const Users = (props) => {
 		}
 	};
 
-	// show modal create User
-	const onHideModalUser = () => {
+	// Hide/close modal create User
+	const onHideModalUser = async () => {
 		setIsShowModalCreate(false);
+		setDataModalUser({}); // set null for all input
+		await fetchUsers(); // refresh data <- if modal create success
+	};
+
+	// Update User - show Modal (tái sử dụng modal create)
+	const handleEditUser = (user) => {
+		setActionModalUser('UPDATE');
+		setDataModalUser(user);
+		setIsShowModalCreate(true);
 	};
 
 	return (
@@ -90,7 +102,10 @@ const Users = (props) => {
 							<button className='btn btn-success'>Refresh</button>
 							<button
 								className='btn btn-primary'
-								onClick={() => setIsShowModalCreate(true)}
+								onClick={() => {
+									setIsShowModalCreate(true);
+									setActionModalUser('CREATE');
+								}}
 							>
 								Add new user
 							</button>
@@ -114,13 +129,18 @@ const Users = (props) => {
 										{listUsers.map((item, index) => {
 											return (
 												<tr key={`row-${index}`}>
-													<td>{index + 1}</td>
+													<td>
+														{(currentPage - 1) * currentLimit + index + 1}
+													</td>
 													<td>{item.id}</td>
 													<td>{item.email}</td>
 													<td>{item.username}</td>
 													<td>{item.Group ? item.Group.name : ''}</td>
 													<td>
-														<button className='btn btn-warning me-2'>
+														<button
+															className='btn btn-warning me-2'
+															onClick={() => handleEditUser(item)}
+														>
 															Edit
 														</button>
 														<button
@@ -180,11 +200,12 @@ const Users = (props) => {
 				confirmDeleteUser={confirmDeleteUser}
 				dataModal={dataModal}
 			/>
-			{/* Modal Create a User */}
+			{/* Modal Create/update User */}
 			<ModalUser
-				title={'Create new user'}
-				onHide={onHideModalUser}
-				show={isShowModalCreate}
+				onHide={onHideModalUser} // close
+				show={isShowModalCreate} // show
+				action={actionModalUser}
+				dataModalUser={dataModalUser}
 			/>
 		</>
 	);

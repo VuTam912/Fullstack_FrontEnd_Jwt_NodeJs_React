@@ -7,6 +7,9 @@ import _ from 'lodash';
 
 // Modal Create a User
 const ModalUser = (props) => {
+	// props
+	const { action, dataModalUser } = props;
+
 	// input - modalUser
 	// cách viết code ngắn thay cho khỏi tạo nhiều biến useState :
 	// states: => dùng để đặt các biến mặc đinh lại khi create thành công/ hoặc thực thi nhiều lần..
@@ -42,14 +45,38 @@ const ModalUser = (props) => {
 		getGroups();
 	}, []);
 
+	useEffect(() => {
+		// xac dinh action la update (button edit) và gán data để edit
+		if (action === 'UPDATE') {
+			console.log('check data set: ', {
+				...dataModalUser,
+				group: dataModalUser.Group ? dataModalUser.Group.id : '',
+			});
+			setUserData({
+				...dataModalUser,
+				group: dataModalUser.Group ? dataModalUser.Group.id : '',
+			});
+		}
+	}, [dataModalUser]); // cập nhập giá trị vừa thay đổi
+
+	// Fix ..
+	useEffect(() => {
+		if (action === 'CREATE') {
+			if (userGroups && userGroups.length > 0) {
+				setUserData({ ...userData, group: userGroups[0].id }); // là 0 chỉ số index trong mảng (object của data) <= coi như index 0 là mặc định
+			}
+		}
+	}, [action]);
+
+	// get data group - Option: add data gender
 	const getGroups = async () => {
-		let res = await getGroup();
+		let res = await getGroup(); // call APi in userService
 		if (res && res.data && +res.data.EC === 0) {
 			setUserGroups(res.data.DT);
 			if (res.data.DT && res.data.DT.length > 0) {
 				let groups = res.data.DT;
 				// ghi de - để lấy giá trị group (1,2,3) => do biến group là string emepty nên cần set mặc đinh là 1
-				setUserData({ ...userData, group: groups[0].id }); // là 0 chỉ số index trong mảng (object của data)
+				setUserData({ ...userData, group: groups[0].id }); // là 0 chỉ số index trong mảng (object của data) <= coi như index 0 là mặc định
 			}
 		} else {
 			toast.error(res.data.EM);
@@ -60,15 +87,15 @@ const ModalUser = (props) => {
 	const handleOnChangeInput = (value, name) => {
 		// do bien userData la const => ko thay doi gia tri nen phai tao bien moi va clone userData
 		let _userData = _.cloneDeep(userData);
-		_userData[name] = value;
+		_userData[name] = value; // gán giá trí đúng tên name trong mảng _userData
 		// update thay doi gia tri cho userData
 		setUserData(_userData);
 	};
 
-	// check Validate Inputs
+	// check Validate Inputs : check xem các value trong input có rỗng ko ? (chú ý chỉ check 1 lượt input)
 	const checkValidateInputs = () => {
 		// set Valid default
-		setValidInputs(validInputsDefault);
+		setValidInputs(validInputsDefault); // vì bước này sẽ yều cầu check lại lần nữa.
 		// console.log('Check user data: ', userData);
 		// create user
 		let arr = ['email', 'phone', 'password', 'group'];
@@ -82,7 +109,7 @@ const ModalUser = (props) => {
 				_validInputs[arr[i]] = false;
 				setValidInputs(_validInputs);
 				check = false;
-				break;
+				break; // thoat vong lap
 			}
 		}
 
@@ -103,10 +130,22 @@ const ModalUser = (props) => {
 				props.onHide();
 				// tạo user thành công thì nên xóa/ hoặc để các input là mặc đinh.
 				setUserData({ ...defaultUserData, group: userGroups[0].id }); // 0 là index của mảng group
-			} else {
-				toast.error('Error create user...');
+			}
+			if (res.data && +res.data.EC !== 0) {
+				toast.error(res.data.EM);
+				// show error in input
+				let _validInputs = _.cloneDeep(validInputsDefault);
+				_validInputs[res.data.DT] = false;
+				setValidInputs(_validInputs);
 			}
 		}
+	};
+
+	// close Modal create/update
+	const handleCloseModalUser = () => {
+		props.onHide();
+		setUserData(defaultUserData);
+		setValidInputs(validInputsDefault);
 	};
 
 	return (
@@ -114,12 +153,14 @@ const ModalUser = (props) => {
 			<Modal
 				size='lg'
 				show={props.show}
-				onHide={props.onHide}
+				onHide={() => handleCloseModalUser()}
 				className='modal-user'
 			>
 				<Modal.Header closeButton>
 					<Modal.Title id='contained-modal-title-vcenter'>
-						<span>{props.title}</span>
+						<span>
+							{props.action === 'CREATE' ? 'Create new user' : 'Edit a user'}
+						</span>
 					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
@@ -130,6 +171,7 @@ const ModalUser = (props) => {
 									Email adress (<span className='red'>*</span>):
 								</label>
 								<input
+									disabled={action === 'CREATE' ? false : true}
 									className={
 										validInputs.email
 											? 'form-control'
@@ -147,6 +189,7 @@ const ModalUser = (props) => {
 									Phone number (<span className='red'>*</span>):
 								</label>
 								<input
+									disabled={action === 'CREATE' ? false : true}
 									className={
 										validInputs.phone
 											? 'form-control'
@@ -170,23 +213,30 @@ const ModalUser = (props) => {
 									}
 								/>
 							</div>
+							{/* hide password when used to edit/ only show when used to create */}
+
 							<div className='col-12 col-sm-6 form-group'>
-								<label>
-									Password (<span className='red'>*</span>):
-								</label>
-								<input
-									className={
-										validInputs.password
-											? 'form-control'
-											: 'form-control is-invalid'
-									}
-									type='password'
-									value={userData.password}
-									onChange={(event) =>
-										handleOnChangeInput(event.target.value, 'password')
-									}
-								/>
+								{action === 'CREATE' && (
+									<>
+										<label>
+											Password (<span className='red'>*</span>):
+										</label>
+										<input
+											className={
+												validInputs.password
+													? 'form-control'
+													: 'form-control is-invalid'
+											}
+											type='password'
+											value={userData.password}
+											onChange={(event) =>
+												handleOnChangeInput(event.target.value, 'password')
+											}
+										/>
+									</>
+								)}
 							</div>
+
 							<div className='col-12 col-sm-12 form-group'>
 								<label>Address:</label>
 								<input
@@ -205,10 +255,11 @@ const ModalUser = (props) => {
 									onChange={(event) =>
 										handleOnChangeInput(event.target.value, 'sex')
 									}
+									value={userData.sex}
 								>
-									<option defaultValue='Male'>Male</option>
-									<option value='Female'>Female</option>
-									<option value='Other'>Other</option>
+									<option value={'Male'}>Male</option>
+									<option value={'Female'}>Female</option>
+									<option value={'Other'}>Other</option>
 								</select>
 							</div>
 							<div className='col-12 col-sm-6 form-group'>
@@ -221,6 +272,8 @@ const ModalUser = (props) => {
 											? 'form-select'
 											: 'form-select is-invalid'
 									}
+									// Add value to select
+									value={userData.group}
 									onChange={(event) =>
 										handleOnChangeInput(event.target.value, 'group')
 									}
@@ -240,11 +293,11 @@ const ModalUser = (props) => {
 					</div>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant='secondary' onClick={props.onHide}>
+					<Button variant='secondary' onClick={() => handleCloseModalUser()}>
 						Close
 					</Button>
 					<Button variant='primary' onClick={() => handleConfirmUser()}>
-						Save
+						{action === 'CREATE' ? 'Create' : 'Update'}
 					</Button>
 				</Modal.Footer>
 			</Modal>
