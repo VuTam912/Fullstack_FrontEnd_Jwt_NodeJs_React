@@ -1,7 +1,11 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useEffect, useState } from 'react';
-import { getGroup, createNewUser } from '../../services/userService';
+import {
+	getGroup,
+	createNewUser,
+	updateCurrentUser,
+} from '../../services/userService';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
 
@@ -42,7 +46,7 @@ const ModalUser = (props) => {
 	const [userGroups, setUserGroups] = useState([]);
 
 	useEffect(() => {
-		getGroups();
+		// getGroups();
 	}, []);
 
 	useEffect(() => {
@@ -94,9 +98,11 @@ const ModalUser = (props) => {
 
 	// check Validate Inputs : check xem các value trong input có rỗng ko ? (chú ý chỉ check 1 lượt input)
 	const checkValidateInputs = () => {
+		// update user
+		if (action === 'UPDATE') return true;
+
 		// set Valid default
 		setValidInputs(validInputsDefault); // vì bước này sẽ yều cầu check lại lần nữa.
-		// console.log('Check user data: ', userData);
 		// create user
 		let arr = ['email', 'phone', 'password', 'group'];
 		let check = true;
@@ -120,16 +126,26 @@ const ModalUser = (props) => {
 	const handleConfirmUser = async () => {
 		let check = checkValidateInputs();
 		if (check === true) {
-			// clone va ghi de
-			let res = await createNewUser({
-				...userData,
-				groupId: userData['group'],
-			}); // fix to get GroupId
+			// handle CREATE and UPDATE
+			let res =
+				action === 'CREATE'
+					? await createNewUser({
+							...userData,
+							groupId: userData['group'], // fix to get GroupId
+					  })
+					: await updateCurrentUser({
+							...userData,
+							groupId: userData['group'],
+					  });
+
 			// create success
 			if (res.data && +res.data.EC === 0) {
 				props.onHide();
 				// tạo user thành công thì nên xóa/ hoặc để các input là mặc đinh.
-				setUserData({ ...defaultUserData, group: userGroups[0].id }); // 0 là index của mảng group
+				setUserData({
+					...defaultUserData,
+					group: userGroups && userGroups.length > 0 ? userGroups[0].id : '',
+				}); // 0 là index của mảng group
 			}
 			if (res.data && +res.data.EC !== 0) {
 				toast.error(res.data.EM);
@@ -268,9 +284,7 @@ const ModalUser = (props) => {
 								</label>
 								<select
 									className={
-										validInputs.password
-											? 'form-select'
-											: 'form-select is-invalid'
+										validInputs.group ? 'form-select' : 'form-select is-invalid'
 									}
 									// Add value to select
 									value={userData.group}

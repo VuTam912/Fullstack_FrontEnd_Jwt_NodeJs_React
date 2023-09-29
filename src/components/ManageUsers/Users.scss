@@ -1,3 +1,18 @@
+.user-body {
+
+    .edit {
+        color        : orange;
+        cursor       : pointer;
+        padding-right: 10px;
+    }
+
+    .delete {
+        color : red;
+        cursor: pointer;
+    }
+
+}
+
 .modal-user {
     .content-body {
         .row {

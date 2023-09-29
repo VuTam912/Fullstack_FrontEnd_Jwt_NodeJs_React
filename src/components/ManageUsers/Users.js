@@ -7,6 +7,7 @@ import ModalDelete from './ModalDelete';
 import ModalUser from './ModalUser';
 
 const Users = (props) => {
+	// data list User for table
 	const [listUsers, setListUsers] = useState([]);
 	// pagination Page
 	const [currentPage, setCurrentPage] = useState(1);
@@ -90,16 +91,26 @@ const Users = (props) => {
 		setIsShowModalCreate(true);
 	};
 
+	// Refresh
+	const handleRefresh = async () => {
+		await fetchUsers(); // load Data API
+	};
+
 	return (
 		<>
 			<div className='container'>
 				<div className='manage-users-container'>
 					<div className='user-header'>
-						<div className='title'>
-							<h3>Table Users</h3>
+						<div className='title my-3'>
+							<h3>Manage Users</h3>
 						</div>
-						<div className='actions'>
-							<button className='btn btn-success'>Refresh</button>
+						<div className='actions mb-3'>
+							<button
+								className='btn btn-success me-2'
+								onClick={() => handleRefresh()}
+							>
+								<i className='fa fa-refresh'></i> Refresh
+							</button>
 							<button
 								className='btn btn-primary'
 								onClick={() => {
@@ -107,7 +118,7 @@ const Users = (props) => {
 									setActionModalUser('CREATE');
 								}}
 							>
-								Add new user
+								<i class='fa fa-plus-circle'></i> Add new user
 							</button>
 						</div>
 					</div>
@@ -137,18 +148,20 @@ const Users = (props) => {
 													<td>{item.username}</td>
 													<td>{item.Group ? item.Group.name : ''}</td>
 													<td>
-														<button
-															className='btn btn-warning me-2'
+														<span
+															title='Edit'
+															className='edit'
 															onClick={() => handleEditUser(item)}
 														>
-															Edit
-														</button>
-														<button
-															className='btn btn-danger'
+															<i class='fa fa-pencil'></i>
+														</span>
+														<span
+															title='Delete'
+															className='delete'
 															onClick={() => handleDeleteUser(item)}
 														>
-															Delete
-														</button>
+															<i class='fa fa-trash'></i>
+														</span>
 													</td>
 												</tr>
 											);
