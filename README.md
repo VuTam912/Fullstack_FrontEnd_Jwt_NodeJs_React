@@ -1,70 +1,49 @@
-# Getting Started with Create React App
+# JSON WEB TOKEN : for backend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+JWT là viết tắt của JSON Web Token, là một tiêu chuẩn mở (RFC 7519) để xác minh thông tin an toàn giữa các bên Client-Server dưới dạng JSON object. Thông tin này có thể được xác minh và tin cậy vì nó được ký điện tử - digitally signed.
 
-## Available Scripts
+JWT được sử dụng rộng rãi trong các ứng dụng web để xác thực người dùng, trao đổi thông tin giữa các microservices và các ứng dụng khác.
 
-In the project directory, you can run:
+## Cấu trúc của JWT
 
-### `npm start`
+JWT là một chuỗi gồm ba phần, được ngăn cách bởi dấu chấm (.):
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Header: Phần này chứa thông tin về loại token và thuật toán được sử dụng để ký token.
+- Payload: Phần này chứa thông tin về người dùng hoặc dữ liệu cần được xác minh.
+- Signature: Phần này được sử dụng để xác minh tính xác thực của token.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Cách thức hoạt động của JWT
 
-### `npm test`
+Khi người dùng đăng nhập thành công, server sẽ tạo một token JWT và gửi cho người dùng. Token này sẽ được lưu trữ trong trình duyệt của người dùng và được gửi kèm theo mỗi yêu cầu đến server.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Khi server nhận được yêu cầu, nó sẽ xác minh tính xác thực của token bằng cách giải mã signature và so sánh với khóa bí mật. Nếu token hợp lệ, server sẽ cho phép yêu cầu tiếp tục.
 
-### `npm run build`
+## Ưu điểm của JWT
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Nhỏ gọn: JWT là một chuỗi nhỏ gọn, dễ dàng truyền tải qua các request HTTP.
+- Dễ sử dụng: JWT có thể được sử dụng trong nhiều ngôn ngữ lập trình và framework khác nhau.
+- An toàn: JWT được ký điện tử để đảm bảo tính xác thực và tính toàn vẹn của dữ liệu.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Nhược điểm của JWT
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Không thể ghi nhớ trạng thái: JWT không lưu trữ trạng thái của người dùng, vì vậy server cần phải lưu trữ trạng thái này ở phía mình.
+Có thể bị tấn công replay: Nếu kẻ tấn công có thể lấy được token của người dùng, họ có thể sử dụng token đó để thực hiện các yêu cầu trái phép.
 
-### `npm run eject`
+## Ứng dụng của JWT
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+JWT được sử dụng rộng rãi trong các ứng dụng web để xác thực người dùng, trao đổi thông tin giữa các microservices và các ứng dụng khác.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Xác thực người dùng: JWT thường được sử dụng để xác thực người dùng trong các ứng dụng web. Khi người dùng đăng nhập thành công, server sẽ tạo một token JWT và gửi cho người dùng. Token này sẽ được lưu trữ trong trình duyệt của người dùng và được gửi kèm theo mỗi yêu cầu đến server.
+- Trao đổi thông tin giữa các microservices: JWT có thể được sử dụng để trao đổi thông tin giữa các microservices. Ví dụ, một microservice có thể sử dụng token JWT để truy cập dữ liệu từ một microservice khác.
+- Các ứng dụng khác: JWT cũng có thể được sử dụng trong các ứng dụng khác, chẳng hạn như:
+  - Xác thực API
+  - Theo dõi trạng thái người dùng
+  - Truy cập trang web không cần đăng nhập
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Kết luận
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+JWT là một tiêu chuẩn mở được sử dụng rộng rãi trong các ứng dụng web để xác minh thông tin an toàn giữa các bên Client-Server. JWT có nhiều ưu điểm, bao gồm nhỏ gọn, dễ sử dụng và an toàn.
 
-## Learn More
+## library: install on backend
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+npm install --save-exact jsonwebtoken@8.5.1 cookie-parser@1.4.6

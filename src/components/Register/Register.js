@@ -92,7 +92,7 @@ const Register = (props) => {
 			if (+serverData.EC === 0) {
 				// EC = error Code
 				// register success => chuyển hệ thức về trang login
-				toast.success(serverData.EM); // EM: error message
+				toast.success(serverData.EM); // EM: message
 				history.push('/Login');
 			} else {
 				toast.error(serverData.EM);

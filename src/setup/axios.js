@@ -8,6 +8,8 @@ const instance = axios.create({
 	baseURL: 'http://localhost:8000/', // <--
 });
 
+instance.defaults.withCredentials = true; // kích hoạt để xem cookie trên chrome
+
 // Alter defaults after instance has been created
 // instance.defaults.headers.common['Authorization'] = 'AUTH_TOKEN 123456789';
 

@@ -26,6 +26,15 @@ const Users = (props) => {
 	// when render done is execute call fetchUsers
 	useEffect(() => {
 		fetchUsers();
+		let c = document.cookie
+			.split(';')
+			.reduce(
+				(ac, cv, i) =>
+					Object.assign(ac, { [cv.split('=')[0]]: cv.split('=')[1] }),
+				{}
+			);
+
+		console.log(c);
 	}, [currentPage]); // fetchUser sẽ chạy lại khi currentPage nhận được thay đổi giá trị mới từ handlePageClick
 
 	// lay data va refresh data lai
