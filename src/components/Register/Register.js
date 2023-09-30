@@ -87,7 +87,7 @@ const Register = (props) => {
 		if (check === true) {
 			// post - api
 			let response = await registerNewUser(email, phone, username, password);
-			let serverData = response.data;
+			let serverData = response;
 
 			if (+serverData.EC === 0) {
 				// EC = error Code

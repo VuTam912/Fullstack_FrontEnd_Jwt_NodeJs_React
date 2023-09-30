@@ -1,11 +1,13 @@
-import axios from 'axios';
+// export instance và import axios <= được phép đặt tên khác.
+import axios from '../setup/axios';
+// import axios from 'axios';
 // USER
 // AXIOS - API - Backend
 
 // Call API from backend to Login/Register
 const registerNewUser = (email, phone, username, password) => {
 	// post - api
-	return axios.post('http://localhost:8000/api/v1/register', {
+	return axios.post('/api/v1/register', {
 		email,
 		phone,
 		username,
@@ -15,7 +17,7 @@ const registerNewUser = (email, phone, username, password) => {
 
 const loginUser = (valueLogin, password) => {
 	// post - api
-	return axios.post('http://localhost:8000/api/v1/login', {
+	return axios.post('/api/v1/login', {
 		valueLogin,
 		password,
 	});
@@ -24,33 +26,31 @@ const loginUser = (valueLogin, password) => {
 // get Data from backend
 // get all User
 const fetchAllUser = (page, limit) => {
-	return axios.get(
-		`http://localhost:8000/api/v1/user/read?page=${page}&limit=${limit}`
-	); // templete string
+	return axios.get(`/api/v1/user/read?page=${page}&limit=${limit}`); // templete string
 };
 
 // delete a user
 const deleteUser = (user) => {
-	return axios.delete('http://localhost:8000/api/v1/user/delete', {
+	return axios.delete('/api/v1/user/delete', {
 		data: { id: user.id },
 	});
 };
 
 // get data group
 const getGroup = () => {
-	return axios.get(`http://localhost:8000/api/v1/group/read`);
+	return axios.get(`/api/v1/group/read`);
 };
 
 // create a user
 const createNewUser = (userData) => {
-	return axios.post(`http://localhost:8000/api/v1/user/create`, {
+	return axios.post(`/api/v1/user/create`, {
 		...userData,
 	});
 };
 
 // update user
 const updateCurrentUser = (userData) => {
-	return axios.put(`http://localhost:8000/api/v1/user/update`, {
+	return axios.put(`/api/v1/user/update`, {
 		...userData,
 	});
 };

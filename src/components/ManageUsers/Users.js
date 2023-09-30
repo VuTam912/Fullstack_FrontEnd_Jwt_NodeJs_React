@@ -32,12 +32,12 @@ const Users = (props) => {
 	const fetchUsers = async () => {
 		// nếu có tham số trên url api or ko có
 		let response = await fetchAllUser(currentPage, currentLimit);
-
+		console.log('--check user: ', response);
 		// check
-		if (response && response.data && +response.data.EC === 0) {
+		if (response && response && +response.EC === 0) {
 			// chú ý tên data trong object của backend
-			setTotalPage(response.data.DT.totalPages);
-			setListUsers(response.data.DT.users);
+			setTotalPage(response.DT.totalPages);
+			setListUsers(response.DT.users);
 
 			// console.log('--check res: ', response.data.DT);
 		}
@@ -67,13 +67,13 @@ const Users = (props) => {
 	// confirm delete user
 	const confirmDeleteUser = async () => {
 		let response = await deleteUser(dataModal);
-		console.log('--check user: ', response);
-		if (response && response.data.EC === 0) {
+
+		if (response && response.EC === 0) {
 			fetchUsers();
-			toast.success(response.data.EM);
+			toast.success(response.EM);
 			setIsShowModalDelete(false); // hide Modal
 		} else {
-			toast.error(response.data.EM);
+			toast.error(response.EM);
 		}
 	};
 
@@ -118,7 +118,7 @@ const Users = (props) => {
 									setActionModalUser('CREATE');
 								}}
 							>
-								<i class='fa fa-plus-circle'></i> Add new user
+								<i className='fa fa-plus-circle'></i> Add new user
 							</button>
 						</div>
 					</div>
@@ -153,14 +153,14 @@ const Users = (props) => {
 															className='edit'
 															onClick={() => handleEditUser(item)}
 														>
-															<i class='fa fa-pencil'></i>
+															<i className='fa fa-pencil'></i>
 														</span>
 														<span
 															title='Delete'
 															className='delete'
 															onClick={() => handleDeleteUser(item)}
 														>
-															<i class='fa fa-trash'></i>
+															<i className='fa fa-trash'></i>
 														</span>
 													</td>
 												</tr>

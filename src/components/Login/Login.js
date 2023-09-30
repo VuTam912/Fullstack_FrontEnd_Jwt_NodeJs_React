@@ -40,7 +40,7 @@ const Login = (props) => {
 
 		// call API  from userService
 		let response = await loginUser(valueLogin, password);
-		if (response && response.data && +response.data.EC === 0) {
+		if (response && response && +response.EC === 0) {
 			// success -> chuyển hướng trang users
 			// set sessionStorage
 			let data = {
@@ -55,11 +55,11 @@ const Login = (props) => {
 			window.location.reload(); // refresh lai
 		}
 
-		if (response && response.data && +response.data.EC !== 0) {
+		if (response && response && +response.EC !== 0) {
 			// error
-			toast.error(response.data.EM);
+			toast.error(response.EM);
 		}
-		console.log('-- check response: ', response.data);
+		console.log('-- check response: ', response);
 	};
 
 	// Click login by key Enter
