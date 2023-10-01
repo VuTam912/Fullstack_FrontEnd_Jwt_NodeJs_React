@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 // Note: Khi link URL api bên backend hoặc domain bị thay đổi thì vào trong này ở đưới đây
 // để sửa đường link URL ở frontend (ko cần phải sửa mỗi link URL Api ở userService)
@@ -33,11 +34,56 @@ instance.interceptors.response.use(
 		// only return data in res and in users.js: response.data.DT => response.DT ok
 		return response.data;
 	},
+	// thông báo lỗi response từ server
 	function (error) {
 		// Nếu response error.
 		// Any status codes that falls outside the range of 2xx cause this function to trigger
 		// Do something with response error
-		return Promise.reject(error);
+		// Any status codes that falls outside the range of 2xx cause this function to trigger
+		// complex : error.response?.status || 500; // ?: nếu error.response bị underfine hoặc null,error thì show 500 còn ko thì là status
+		// simple:
+		const status = (error && error.response && error.response.status) || 500;
+
+		// we can handle global errors here
+		switch (status) {
+			// authentication (token related issues)
+			case 401: {
+				toast.error('Unauthorized the user. Please login...');
+				// window.location.href = '/login';
+				return Promise.reject(error);
+			}
+
+			// forbidden (permission related issues)
+			case 403: {
+				toast.error(`You don't permission to access this resource...`);
+				return Promise.reject(error);
+			}
+
+			// bad request
+			case 400: {
+				return Promise.reject(error);
+			}
+
+			// not found
+			case 404: {
+				return Promise.reject(error);
+			}
+
+			// conflict
+			case 409: {
+				return Promise.reject(error);
+			}
+
+			// unprocessable
+			case 422: {
+				return Promise.reject(error);
+			}
+
+			// generic api error (server related) unexpected
+			default: {
+				return Promise.reject(error);
+			}
+		}
 	}
 );
 
