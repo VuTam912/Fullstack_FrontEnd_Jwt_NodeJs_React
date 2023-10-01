@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import './Login.scss';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { loginUser } from '../../services/userService';
+import { UserContext } from '../../context/UserContext';
 
 const Login = (props) => {
+	const { loginContext } = useContext(UserContext);
+
 	let history = useHistory(); // replace to NavLink or Link if use button
 
 	const [valueLogin, setValueLogin] = useState('');
@@ -40,26 +43,38 @@ const Login = (props) => {
 
 		// call API  from userService
 		let response = await loginUser(valueLogin, password);
-		if (response && response && +response.EC === 0) {
+		if (response && +response.EC === 0) {
+			let groupwtihRoles = response.DT.groupwtihRoles;
+			let email = response.DT.email;
+			let username = response.DT.username;
+			let token = response.DT.access_token;
+
 			// success -> chuyển hướng trang users
-			// set sessionStorage
+			// set sessionStorage - luu thong tin trang thai
 			let data = {
 				isAuthenticated: true,
-				token: 'fake token',
+				token,
+				acoount: {
+					groupwtihRoles,
+					email,
+					username,
+				},
 			};
 
 			sessionStorage.setItem('account', JSON.stringify(data)); // JSON.
+			loginContext(data); // set context
+
 			// chú ý nó sẽ ko render component (App) lai khi chuyển huong trang mà chi render User trong switch cảu router
 			// fix: refresh cả trang lai App
 			history.push('/users');
-			window.location.reload(); // refresh lai
+			// window.location.reload(); // refresh lai
 		}
 
-		if (response && response && +response.EC !== 0) {
+		if (response && +response.EC !== 0) {
 			// error
 			toast.error(response.EM);
 		}
-		console.log('-- check response: ', response);
+		// console.log('-- check response: ', response);
 	};
 
 	// Click login by key Enter
@@ -75,7 +90,7 @@ const Login = (props) => {
 		// nếu user đã login rồi thì đây vào trang home
 		if (session) {
 			history.push('/');
-			window.location.reload(); // reload để show navigation
+			// window.location.reload(); // reload để show navigation
 		}
 	}, []);
 

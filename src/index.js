@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { UserProivder } from './context/UserContext';
 // boostrap
 import 'bootstrap/dist/css/bootstrap.min.css';
 //font-awesome
@@ -9,7 +10,9 @@ import 'font-awesome/css/font-awesome.min.css';
 
 ReactDOM.render(
 	<React.StrictMode>
-		<App />
+		<UserProivder>
+			<App />
+		</UserProivder>
 	</React.StrictMode>,
 	document.getElementById('root')
 );

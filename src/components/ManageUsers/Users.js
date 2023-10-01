@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 import { fetchAllUser, deleteUser } from '../../services/userService';
 import './Users.scss';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import ModalDelete from './ModalDelete';
 import ModalUser from './ModalUser';
@@ -26,24 +26,15 @@ const Users = (props) => {
 	// when render done is execute call fetchUsers
 	useEffect(() => {
 		fetchUsers();
-		let c = document.cookie
-			.split(';')
-			.reduce(
-				(ac, cv, i) =>
-					Object.assign(ac, { [cv.split('=')[0]]: cv.split('=')[1] }),
-				{}
-			);
-
-		console.log(c);
 	}, [currentPage]); // fetchUser sẽ chạy lại khi currentPage nhận được thay đổi giá trị mới từ handlePageClick
 
 	// lay data va refresh data lai
 	const fetchUsers = async () => {
 		// nếu có tham số trên url api or ko có
 		let response = await fetchAllUser(currentPage, currentLimit);
-		console.log('--check user: ', response);
+		// console.log('--check user: ', response);
 		// check
-		if (response && response && +response.EC === 0) {
+		if (response && +response.EC === 0) {
 			// chú ý tên data trong object của backend
 			setTotalPage(response.DT.totalPages);
 			setListUsers(response.DT.users);
