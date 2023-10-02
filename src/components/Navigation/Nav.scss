@@ -26,3 +26,41 @@ body {
     background-color: #04AA6D;
     color           : white;
 }
+
+.nav-header {
+
+    .brand-color {
+        color: #61dafb !important;
+    }
+
+    // left
+    .bg-header {
+        background-color: #20232a;
+    }
+
+    a,
+    .nav-link {
+        color: white !important;
+
+        &:hover {
+            color: #61dafb !important;
+        }
+
+    }
+
+
+    .nav-link {
+        &.active {
+            color: #61dafb !important;
+
+        }
+    }
+
+    //right
+
+    .dropdown-menu {
+        a {
+            color: #212529 !important;
+        }
+    }
+}

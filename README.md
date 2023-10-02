@@ -47,3 +47,5 @@ JWT là một tiêu chuẩn mở được sử dụng rộng rãi trong các ứ
 ## library: install on backend
 
 npm install --save-exact jsonwebtoken@8.5.1 cookie-parser@1.4.6
+
+## lưu ý: nên dùng cả cookie và localStorage = để bảo mật

@@ -41,7 +41,7 @@ const Login = (props) => {
 			return;
 		}
 
-		// call API  from userService
+		// call API from userService
 		let response = await loginUser(valueLogin, password);
 
 		if (response && +response.EC === 0) {
