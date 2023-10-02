@@ -1,7 +1,7 @@
 // export instance và import axios <= được phép đặt tên khác.
 import axios from '../setup/axios';
 // import axios from 'axios';
-// USER
+// USER - cac thao xu ly logic duoc backend xu ly khi frontend goi
 // AXIOS - API - Backend
 
 // Call API from backend to Login/Register
@@ -60,6 +60,11 @@ const getUserAccount = () => {
 	return axios.get(`/api/v1/account`);
 };
 
+// logout
+const logoutUser = () => {
+	return axios.post(`/api/v1/logout`);
+};
+
 export {
 	registerNewUser,
 	loginUser,
@@ -69,4 +74,5 @@ export {
 	createNewUser,
 	updateCurrentUser,
 	getUserAccount,
+	logoutUser,
 };

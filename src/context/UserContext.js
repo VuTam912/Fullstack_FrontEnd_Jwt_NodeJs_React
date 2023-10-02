@@ -8,6 +8,7 @@ const UserContext = React.createContext(null); // biến khởi tạo
 
 // children = component
 const UserProivder = ({ children }) => {
+	//
 	const userDefault = {
 		isLoading: true, // mat dinh la dang show loading - fix error refresh (F5)
 		isAuthenticated: false,
@@ -24,11 +25,8 @@ const UserProivder = ({ children }) => {
 	};
 
 	// Logout updates the user data to default
-	const logout = () => {
-		setUser((user) => ({
-			name: '',
-			auth: false,
-		}));
+	const logoutContext = () => {
+		setUser({ ...userDefault, isLoading: false }); // set lai isloading là false
 	};
 
 	// chay ngan (background)
@@ -63,16 +61,21 @@ const UserProivder = ({ children }) => {
 
 	// thuc thi khi render xong - Fix: when user press F5 or refresh to get userAccount agains
 	useEffect(() => {
+		// nếu vào khác trang home và login thì thưc thi get userAccount còn ko thì ko thưc thi
 		if (
-			window.location.pathname !== '/' ||
+			window.location.pathname !== '/' &&
 			window.location.pathname !== '/login'
 		) {
 			fetchUser(); // when render xong thi turn off loading
+		} else {
+			// turn off loading => do loading mặc định là true.
+			setUser({ ...userDefault, isLoading: false });
 		}
 	}, []);
 
 	return (
-		<UserContext.Provider value={{ user, loginContext, logout }}>
+		// add vào trong index.js và để các component khác có thể truy cập 3 biến đó và dùng nó check điều kiện hoặc xử lý
+		<UserContext.Provider value={{ user, loginContext, logoutContext }}>
 			{children}
 		</UserContext.Provider>
 	);
