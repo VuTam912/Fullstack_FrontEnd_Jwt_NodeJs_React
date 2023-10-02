@@ -12,12 +12,15 @@ const instance = axios.create({
 instance.defaults.withCredentials = true; // kích hoạt để xem cookie trên chrome
 
 // Alter defaults after instance has been created
-// instance.defaults.headers.common['Authorization'] = 'AUTH_TOKEN 123456789';
+instance.defaults.headers.common[
+	'Authorization'
+] = `Bearer ${localStorage.getItem('jwt')}`;
 
 // Add a request interceptor (bộ chặn - check) : sử lý thực thi khi HTTP request được call
 instance.interceptors.request.use(
 	function (config) {
 		// Do something before request is sent
+		config.headers.Authorization = `Bearer ${localStorage.getItem('jwt')}`;
 		return config;
 	},
 	function (error) {

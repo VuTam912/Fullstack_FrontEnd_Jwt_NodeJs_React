@@ -62,13 +62,13 @@ const Login = (props) => {
 				},
 			};
 
+			// set token phụ vào gán nó vào header
+			localStorage.setItem('jwt', token);
 			// set session - > cac component gio co the truy cap cac bien
 			loginContext(data); // set context cho các component có thể truy cập biến data
-
-			// chú ý nó sẽ ko render component (App) lai khi chuyển huong trang mà chi render User trong switch cảu router
-			// fix: refresh cả trang lai App
+			// chú ý: nó sẽ ko render component (App) lai khi chuyển huong trang mà chi render User trong switch cảu router
+			// fix: refresh cả App.js
 			history.push('/users');
-			// window.location.reload(); // refresh lai - do chuyen user thi chi render trpmg swtich nen can refresh de hien ca navgiation
 		}
 
 		if (response && +response.EC !== 0) {
