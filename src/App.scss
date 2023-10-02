@@ -34,6 +34,8 @@ body {
     color: #61dafb;
 }
 
+
+
 @keyframes App-logo-spin {
     from {
         transform: rotate(0deg);
@@ -41,5 +43,19 @@ body {
 
     to {
         transform: rotate(360deg);
+    }
+}
+
+.loading-container {
+    display        : flex;
+    justify-content: center;
+    flex-direction : column;
+    align-items    : center;
+    min-height     : 100vh;
+}
+
+.loading-container {
+    .title_loading {
+        margin-top: 10px;
     }
 }

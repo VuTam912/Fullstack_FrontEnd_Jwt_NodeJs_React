@@ -31,7 +31,7 @@ const Users = (props) => {
 	// lay data va refresh data lai
 	const fetchUsers = async () => {
 		// nếu có tham số trên url api or ko có
-		let response = await fetchAllUser(currentPage, currentLimit);
+		let response = await fetchAllUser(currentPage, currentLimit); // call API
 		// console.log('--check user: ', response);
 		// check
 		if (response && +response.EC === 0) {
