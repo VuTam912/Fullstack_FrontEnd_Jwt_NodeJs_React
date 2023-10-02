@@ -1,30 +1,23 @@
 import { useEffect, useContext } from 'react';
-import { Route, useHistory } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 
 // Xử lý nếu User đã login chưa ?
 const PrivateRoutes = (props) => {
-	let history = useHistory();
+	// get info user ở trong useContent (ko cần props)
 	const { user } = useContext(UserContext);
 
-	useEffect(() => {
-		console.log('>>> check content user: ', user);
-		let session = sessionStorage.getItem('account');
-		// nếu cố nhập/vào URL mà chưa Login thì đẩy sang trang Login
-		if (!session) {
-			history.push('/login');
-			// window.location.reload(); // reload để hide navigation lại
-		}
-		if (session) {
-			//code
-		}
-	}, []);
-
-	return (
-		<>
-			<Route path={props.path} component={props.component} />
-		</>
-	);
+	// check user đã trong context nếu đã login (đã setContext khi login)
+	if (user && user.isAuthenticated === true) {
+		return (
+			<>
+				<Route path={props.path} component={props.component} />
+			</>
+		);
+	} else {
+		// chuyên tới trang login thì chưa đăng nhập.
+		return <Redirect to='/login'></Redirect>;
+	}
 };
 
 export default PrivateRoutes;

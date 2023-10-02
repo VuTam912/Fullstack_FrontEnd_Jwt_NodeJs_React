@@ -1,22 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import './Nav.scss';
 import { NavLink, useLocation } from 'react-router-dom';
+import { UserContext } from '../../context/UserContext';
 
 const Nav = (props) => {
-	const [isShow, setIsShow] = useState(true); // default là hiện navigation
-	// get URL vị trí hiện tại dang dùng - nếu user access URL login
-	let location = useLocation();
+	const { user } = useContext(UserContext);
+	// lay duong url hien tai khi user dang truy cap vao
+	const location = useLocation();
 
-	useEffect(() => {
-		// nếu Navgiation show ở trang Login thì hide navgiation
-		if (location.pathname === '/login') {
-			setIsShow(false); // hide navigation
-		}
-	}, []);
-
-	return (
-		<>
-			{isShow === true && (
+	// check user đã trong context nếu đã login (đã setContext khi login)
+	if ((user && user.isAuthenticated === true) || location.pathname === '/') {
+		// chỉ hiện nav ở trang home
+		return (
+			<>
 				<div className='topnav'>
 					<NavLink to='/' exact>
 						Home
@@ -25,9 +21,12 @@ const Nav = (props) => {
 					<NavLink to='/projects'>Projects</NavLink>
 					<NavLink to='/about'>About</NavLink>
 				</div>
-			)}
-		</>
-	);
+			</>
+		);
+		// else : ko hien navgiation ở Login
+	} else {
+		return <></>;
+	}
 };
 
 export default Nav;

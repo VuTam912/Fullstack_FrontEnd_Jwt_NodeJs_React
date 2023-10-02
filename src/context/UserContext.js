@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { getUserAccount } from '../services/userService';
+import { useEffect } from 'react';
+// React Context: Luu thong tin global - cho phép các component có thể truy cập được biến mà ko cần phải truyền props từ cha sang con (component)
 
-// React Context: Luu thong tin global
-
-const UserContext = React.createContext({ name: '', auth: false });
+const UserContext = React.createContext(null); // biến khởi tạo
 
 // children = component
 const UserProivder = ({ children }) => {
@@ -25,6 +26,34 @@ const UserProivder = ({ children }) => {
 			auth: false,
 		}));
 	};
+
+	const fetchUser = async () => {
+		let response = await getUserAccount(); // call tu phia server
+		if (response && response.EC === 0) {
+			let groupwtihRoles = response.DT.groupwtihRoles;
+			let email = response.DT.email;
+			let username = response.DT.username;
+			let token = response.DT.access_token;
+
+			// set sessionStorage - luu thong tin trang thai
+			let data = {
+				isAuthenticated: true,
+				token,
+				acoount: {
+					groupwtihRoles,
+					email,
+					username,
+				},
+			};
+
+			setUser(data);
+		}
+	};
+
+	// thuc thi khi render xong
+	useEffect(() => {
+		fetchUser();
+	}, []);
 
 	return (
 		<UserContext.Provider value={{ user, loginContext, logout }}>

@@ -61,8 +61,8 @@ const Login = (props) => {
 				},
 			};
 
-			sessionStorage.setItem('account', JSON.stringify(data)); // JSON.
-			loginContext(data); // set context
+			// set session
+			loginContext(data); // set context cho các component có thể truy cập biến data
 
 			// chú ý nó sẽ ko render component (App) lai khi chuyển huong trang mà chi render User trong switch cảu router
 			// fix: refresh cả trang lai App
@@ -83,16 +83,6 @@ const Login = (props) => {
 			handleLogin();
 		}
 	};
-
-	// Check if user has loggin and want access Login agains
-	useEffect(() => {
-		let session = sessionStorage.getItem('account');
-		// nếu user đã login rồi thì đây vào trang home
-		if (session) {
-			history.push('/');
-			// window.location.reload(); // reload để show navigation
-		}
-	}, []);
 
 	return (
 		<div className='Login-container '>

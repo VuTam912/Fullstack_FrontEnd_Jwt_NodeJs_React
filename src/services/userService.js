@@ -55,6 +55,11 @@ const updateCurrentUser = (userData) => {
 	});
 };
 
+// get info User Account when login
+const getUserAccount = () => {
+	return axios.get(`/api/v1/account`);
+};
+
 export {
 	registerNewUser,
 	loginUser,
@@ -63,4 +68,5 @@ export {
 	getGroup,
 	createNewUser,
 	updateCurrentUser,
+	getUserAccount,
 };
