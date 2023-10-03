@@ -2,6 +2,7 @@ import { Switch, Route } from 'react-router-dom';
 import Users from '../components/ManageUsers/Users';
 import Login from '../components/Login/Login';
 import Register from '../components/Register/Register';
+import Role from '../components/Role/Role';
 import PrivateRoutes from './PrivateRoutes';
 
 const AppRoutes = (props) => {
@@ -16,6 +17,7 @@ const AppRoutes = (props) => {
 				{/* PrivateRoutes => check if user has logged in yet */}
 				<PrivateRoutes path='/users' component={Users} />
 				<PrivateRoutes path='/projects' component={Project} />
+				<PrivateRoutes path='/roles' component={Role} />
 
 				<Route path='/login'>
 					<Login />
