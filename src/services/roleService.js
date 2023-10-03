@@ -7,4 +7,15 @@ const createRoles = (roles) => {
 	return axios.post('/api/v1/role/create', [...roles]); // note: phai tra ve array voi object , ko tra 1 object
 };
 
-export { createRoles };
+const fetchAllRoles = () => {
+	return axios.get('/api/v1/role/read');
+};
+
+// delete a role
+const deleteRole = (role) => {
+	return axios.delete('/api/v1/role/delete', {
+		data: { id: role.id },
+	});
+};
+
+export { createRoles, fetchAllRoles, deleteRole };

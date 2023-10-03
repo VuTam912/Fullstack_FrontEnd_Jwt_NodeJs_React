@@ -169,7 +169,7 @@ const Users = (props) => {
 									</>
 								) : (
 									<tr>
-										<td>
+										<td colSpan={6} align='center'>
 											<>
 												<span>Not found users</span>
 											</>
