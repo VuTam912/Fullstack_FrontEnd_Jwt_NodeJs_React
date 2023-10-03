@@ -3,19 +3,31 @@ import { useState } from 'react';
 import _ from 'lodash';
 import { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid'; // generate a random id
+import { toast } from 'react-toastify';
+import { createRoles } from '../../services/roleService';
 
 const Role = (props) => {
+	const dataChildDefault = {
+		url: '',
+		description: '',
+		isValidUrl: true,
+	};
+
 	const [listChilds, setListChilds] = useState({
-		child1: { url: '', description: '' },
+		child1: dataChildDefault,
 	});
 
-	// change Input with array
+	// onChange Input with array
 	const handleOnChangeInput = (name, value, key) => {
 		let _listChilds = _.cloneDeep(listChilds); // clone - cloneDeep để tránh bug state
 
 		// key, name -
 		_listChilds[key][name] = value;
 
+		if (value && name === 'url') {
+			// ở url, nếu có gia trị nhập trong input
+			_listChilds[key]['isValidUrl'] = true; // set la true
+		}
 		setListChilds(_listChilds);
 	};
 
@@ -24,10 +36,7 @@ const Role = (props) => {
 		let _listChilds = _.cloneDeep(listChilds); // clone
 		// create a child with a random id
 
-		_listChilds[`child-${uuidv4()}`] = {
-			url: '',
-			description: '',
-		};
+		_listChilds[`child-${uuidv4()}`] = dataChildDefault; // add with data default
 
 		// update state
 		setListChilds(_listChilds);
@@ -42,6 +51,49 @@ const Role = (props) => {
 		setListChilds(_listChilds);
 	};
 
+	// build Data
+	const builddataToPersist = () => {
+		let _listChilds = _.cloneDeep(listChilds); // clone
+		let result = [];
+		Object.entries(_listChilds).map(([key, child], index) => {
+			result.push({
+				url: child.url,
+				description: child.description,
+			});
+		});
+		return result;
+	};
+
+	const handleSave = async () => {
+		// find invalid in listChids (tim 1 lan thoi)
+		let invalidObj = Object.entries(listChilds).find(([key, child], index) => {
+			return child && !child.url; // da add input nhung ko nhap value trong url
+		});
+
+		// undefinie: neu ko co invalid => cac input deu nhap het ko con chuoi rong de nhap =>
+		if (!invalidObj) {
+			//call api
+			let data = builddataToPersist(); // get data input
+
+			console.log('data: ', data);
+
+			let res = await createRoles(data);
+
+			if (res && res.EC === 0) {
+				toast.success(res.EM);
+			}
+		} else {
+			//error - chưa nhập Input URL
+			// console.log('>>> invalid: ', invalidObj);
+			toast.error('Input URL must not be empty');
+			let _listChilds = _.cloneDeep(listChilds); // clone - cloneDeep để tránh bug state
+			const key = invalidObj[0]; // index dau tien cua id
+
+			_listChilds[key]['isValidUrl'] = false; // set validate for input
+			setListChilds(_listChilds);
+		}
+	};
+
 	return (
 		<div className='role-container'>
 			<div className='container'>
@@ -51,15 +103,19 @@ const Role = (props) => {
 					</div>
 					<div className='role-parents'>
 						{/* object.entries: => tra ve 2 bien key va value cua 1 object | index = la chi so cua 1 object */}
-						{Object.entries(listChilds).map(([key, value], index) => {
+						{Object.entries(listChilds).map(([key, child], index) => {
 							return (
 								<div className='row role-child' key={`child-${key}`}>
 									<div className={`col-5 form-group ${key}`}>
 										<label>URL:</label>
 										<input
+											className={
+												child.isValidUrl
+													? 'form-control'
+													: 'form-control is-invalid'
+											}
 											type='text'
-											className='form-control'
-											value={value.url}
+											value={child.url}
 											onChange={(e) =>
 												handleOnChangeInput('url', e.target.value, key)
 											}
@@ -71,7 +127,7 @@ const Role = (props) => {
 										<input
 											type='text'
 											className='form-control'
-											value={value.description}
+											value={child.description}
 											onChange={(e) =>
 												handleOnChangeInput('description', e.target.value, key)
 											}
@@ -95,7 +151,12 @@ const Role = (props) => {
 						})}
 
 						<div>
-							<button className='btn btn-warning mt-3'>Save</button>
+							<button
+								className='btn btn-warning mt-3'
+								onClick={() => handleSave()}
+							>
+								Save
+							</button>
 						</div>
 					</div>
 				</div>
