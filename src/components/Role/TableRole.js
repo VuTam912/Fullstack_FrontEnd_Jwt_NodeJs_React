@@ -18,7 +18,7 @@ const TableRole = forwardRef((props, ref) => {
 		},
 	}));
 
-	// getData
+	// getData Roles
 	const getAllRoles = async () => {
 		let data = await fetchAllRoles();
 
@@ -26,6 +26,7 @@ const TableRole = forwardRef((props, ref) => {
 			setListRoles(data.DT);
 		}
 	};
+
 	const handleDeleteRole = async (role) => {
 		let data = await deleteRole(role);
 		if (data && +data.EC === 0) {

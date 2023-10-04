@@ -36,7 +36,7 @@ const deleteUser = (user) => {
 	});
 };
 
-// get data group
+// get data group - fetchGroup
 const getGroup = () => {
 	return axios.get(`/api/v1/group/read`);
 };
