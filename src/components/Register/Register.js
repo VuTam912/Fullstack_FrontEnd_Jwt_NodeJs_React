@@ -1,11 +1,14 @@
 import './Register.scss';
-import { useHistory } from 'react-router-dom';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useHistory, Link } from 'react-router-dom';
+import { useEffect, useState, useContext } from 'react';
 import { toast } from 'react-toastify';
 import { registerNewUser } from '../../services/userService';
+import { UserContext } from '../../context/UserContext';
 
 const Register = (props) => {
+	// su dung bien o trong useContext
+	const { user } = useContext(UserContext);
+
 	// Form's State
 	const [email, setEmail] = useState('');
 	const [phone, setPhone] = useState('');
@@ -32,9 +35,9 @@ const Register = (props) => {
 
 	// when render done.
 	useEffect(() => {
-		// axios.get('http://localhost:8000/api/v1/test-api').then((data) => {
-		// 	console.log(data);
-		// });
+		if (user && user.isAuthenticated) {
+			history.push('/');
+		}
 	}, []);
 
 	// Validate Form
@@ -203,6 +206,12 @@ const Register = (props) => {
 							>
 								Already have an account. Login
 							</button>
+							<div className='mt-3 return'>
+								<Link to='/'>
+									<i className='fa fa-arrow-circle-left'></i>{' '}
+									<span title='Return to homepage'>Return to homepage</span>
+								</Link>
+							</div>
 						</div>
 					</div>
 				</div>

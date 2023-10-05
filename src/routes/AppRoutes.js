@@ -5,6 +5,7 @@ import Register from '../components/Register/Register';
 import Role from '../components/Role/Role';
 import GroupRole from '../components/GroupRole/GroupRole';
 import PrivateRoutes from './PrivateRoutes';
+import Home from '../components/Home/home';
 
 const AppRoutes = (props) => {
 	const Project = () => {
@@ -27,9 +28,13 @@ const AppRoutes = (props) => {
 					<Register />
 				</Route>
 				<Route path='/' exact>
-					Home
+					<Home />
 				</Route>
-				<Route path='*'>404 - Not found</Route>
+				<Route path='*'>
+					<div className='container'>
+						<h3>404 - Not found </h3>
+					</div>
+				</Route>
 			</Switch>
 		</>
 	);

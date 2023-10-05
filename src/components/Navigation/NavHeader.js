@@ -40,7 +40,7 @@ const NavHeader = (props) => {
 				<div className='nav-header'>
 					<Navbar expand='lg' bg='dark' data-bs-theme='dark'>
 						<Container>
-							<Navbar.Brand href='/'>
+							<Navbar.Brand>
 								<img
 									src={logo}
 									width='30'

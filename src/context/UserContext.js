@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { getUserAccount } from '../services/userService';
 import { useEffect } from 'react';
 
+// Run background
 // React Context: Luu thong tin global - cho phép các component có thể truy cập được biến mà ko cần phải truyền props từ cha sang con (component)
 
 const UserContext = React.createContext(null); // biến khởi tạo
@@ -61,16 +62,17 @@ const UserProivder = ({ children }) => {
 
 	// thuc thi khi render xong - Fix: when user press F5 or refresh to get userAccount agains
 	useEffect(() => {
-		// nếu vào khác trang home và login thì thưc thi get userAccount còn ko thì ko thưc thi
-		if (
-			window.location.pathname !== '/' &&
-			window.location.pathname !== '/login'
-		) {
-			fetchUser(); // when render xong thi turn off loading
-		} else {
-			// turn off loading => do loading mặc định là true.
-			setUser({ ...userDefault, isLoading: false });
-		}
+		// // nếu vào khác trang home và login thì thưc thi get userAccount còn ko thì ko thưc thi
+		// if (
+		// 	window.location.pathname !== '/' &&
+		// 	window.location.pathname !== '/login'
+		// ) {
+		// 	fetchUser(); // when render xong thi turn off loading
+		// } else {
+		// 	setUser({ ...userDefault, isLoading: false }); // turn off loading => do loading mặc định là true.
+		// }
+		// Login.js đã fix nên ko check if.
+		fetchUser();
 	}, []);
 
 	return (

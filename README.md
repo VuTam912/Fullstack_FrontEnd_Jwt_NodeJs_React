@@ -49,3 +49,8 @@ JWT là một tiêu chuẩn mở được sử dụng rộng rãi trong các ứ
 npm install --save-exact jsonwebtoken@8.5.1 cookie-parser@1.4.6
 
 ## lưu ý: nên dùng cả cookie và localStorage = để bảo mật
+
+## Khác:
+
+- fix scollbars
+  npm install --save-exact react-custom-scrollbars@4.2.1

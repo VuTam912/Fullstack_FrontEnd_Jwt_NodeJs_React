@@ -1,12 +1,12 @@
 import { useEffect, useState, useContext } from 'react';
 import './Login.scss';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { loginUser } from '../../services/userService';
 import { UserContext } from '../../context/UserContext';
 
 const Login = (props) => {
-	const { loginContext } = useContext(UserContext);
+	const { user, loginContext } = useContext(UserContext);
 
 	let history = useHistory(); // replace to NavLink or Link if use button
 
@@ -85,6 +85,14 @@ const Login = (props) => {
 		}
 	};
 
+	// khi đã đăng nhập rồi thì ko nên vào trang login. Nếu muốn vào thì phải logout
+	// Note: Nhớ check trong Context (chạy background)
+	useEffect(() => {
+		if (user && user.isAuthenticated) {
+			history.push('/');
+		}
+	}, []);
+
 	return (
 		<div className='Login-container '>
 			<div className='container'>
@@ -142,6 +150,12 @@ const Login = (props) => {
 							>
 								Create new account
 							</button>
+							<div className='mt-3 return'>
+								<Link to='/'>
+									<i className='fa fa-arrow-circle-left'></i>{' '}
+									<span title='Return to homepage'>Return to homepage</span>
+								</Link>
+							</div>
 						</div>
 					</div>
 				</div>
